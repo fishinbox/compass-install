@@ -41,9 +41,7 @@
     - createrepo
     - mkisofs
     - syslinux
-    - debmirror
     - pykickstart
-    - cman 
     - bind
     - rsync
     - dhcp
@@ -79,10 +77,7 @@
 
 - name: disable selinux
   selinux: state=disabled
-
-- name: disable selinux real time
-  shell: echo 0 > /selinux/enforce
-
+ 
 - name: copy cobbler configuration files
   template: src={{ item.name }} dest=/etc/cobbler/{{ item.file_name }} mode=0644
   with_items:
