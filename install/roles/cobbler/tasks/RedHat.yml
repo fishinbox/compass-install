@@ -54,6 +54,10 @@
 - name: turn off iptables
   service: name=iptables state=stopped enabled=no
 
+# Somehow the iptables is still working and trying to allow tftp service
+- name: allow tftp
+  command: iptables -I INPUT -p udp --dport 69 -j ACCEPT -m comment --comment "Allow TFTP"
+
 - name: replace config files
   copy: src={{ item.name }} dest={{ item.dest }}
   with_items:
@@ -77,7 +81,11 @@
 
 - name: disable selinux
   selinux: state=disabled
- 
+- name: copy cobbler distro_signatures
+  file: src={{ item }} dest=/var/lib/cobbler/{{ item }} mode=0644
+  with_items:
+    - distro_signatures.json
+
 - name: copy cobbler configuration files
   template: src={{ item.name }} dest=/etc/cobbler/{{ item.file_name }} mode=0644
   with_items:
@@ -232,6 +240,9 @@
   with_items: distros
   when: region == "us"
 
+- name: download agent image
+  get_url: url={{ agent_source }} dest=/var/lib/cobbler/iso/core.iso mode=0644
+
 - name: mount_info
   command: mount
   register: mount_info
@@ -240,6 +251,10 @@
   file: name=/mnt/{{ item.name }} state=directory
   with_items: distros
   when: mount_info.stdout.find('CentOS') == -1 and mount_info.stdout.find('Ubuntu') == -1
+  ignore_errors: yes
+
+- name: create agent mount point
+  file: name=/mnt/core state=directory
   ignore_errors: yes
 
 - name: mount images
@@ -251,11 +266,29 @@
   ignore_errors: yes
   run_once: True
 
+- name: mount agent image
+  mount: fstype=loop name=/mnt/core src=/var/lib/cobbler/iso/core.iso state=mounted fstab=/dev/null
+#  shell: mount -o loop /var/lib/cobbler/iso/core.iso /mnt/core
+  run_once: True
+
 - name: import distros
   command: cobbler import --path=/mnt/{{ item.name }} --name {{ item.name }} --arch=x86_64 --kickstart=/var/lib/cobbler/kickstarts/default.ks --breed={{ item.breed }}
   with_items: distros
   args:
     creates: /opt/distro_imported.txt
+  ignore_errors: yes
+  run_once: True
+
+- name: import agent
+  command: cobbler import --path=/mnt/core --name CorePure --arch=x86_64
+  ignore_errors: yes
+  run_once: True
+
+- name: edit agent profile
+  command: cobbler profile edit --name=CorePure-x86_64 --enable-menu=True
+
+- name: create default system
+  command: cobbler system add --name=default --profile=CorePure-x86_64
   ignore_errors: yes
   run_once: True
 

@@ -1,6 +1,7 @@
 #dockerized: True
 compass_adapter_source: https://github.com/fishinbox/compass-adapters.git
 compass_adapter_version: master
+agent_source: https://github.com/fishinbox/compass-core/blob/add-tc/misc/tcagent/iso/core.iso?raw=true
 epel_file_name: epel-release-6-8.noarch.rpm
 epel_base_url: http://download.fedoraproject.org/pub/epel/6/x86_64/
 epel7_base_url: http://download.fedoraproject.org/pub/epel/7/x86_64/e/
