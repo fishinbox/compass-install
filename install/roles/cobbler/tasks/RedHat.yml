@@ -81,8 +81,9 @@
 
 - name: disable selinux
   selinux: state=disabled
+
 - name: copy cobbler distro_signatures
-  file: src={{ item }} dest=/var/lib/cobbler/{{ item }} mode=0644
+  copy: src={{ item }} dest=/var/lib/cobbler/{{ item }} mode=0644
   with_items:
     - distro_signatures.json
 
@@ -95,6 +96,7 @@
     - { name: named.template.nodocker.j2, file_name: named.template }
     - { name: settings.j2, file_name: settings }
   notify:
+    - restart httpd
     - restart cobbler
     - cobbler sync
 
@@ -267,8 +269,9 @@
   run_once: True
 
 - name: mount agent image
-  mount: fstype=loop name=/mnt/core src=/var/lib/cobbler/iso/core.iso state=mounted fstab=/dev/null
-#  shell: mount -o loop /var/lib/cobbler/iso/core.iso /mnt/core
+  #mount: fstype=loop name=/mnt/core src=/var/lib/cobbler/iso/core.iso state=mounted fstab=/dev/null
+  shell: mount -o loop /var/lib/cobbler/iso/core.iso /mnt/core
+  ignore_errors: yes
   run_once: True
 
 - name: import distros

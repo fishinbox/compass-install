@@ -53,8 +53,8 @@
 - name: disable selinux
   selinux: state=disabled
 
-- name: disable selinux real time
-  shell: echo 0 > /selinux/enforce
+#- name: disable selinux real time
+#  shell: echo 0 > /selinux/enforce
 
 # TODO: currently compass use root user and group, apache has to
 # be in root group to write wsgi logs in /var/log/compass/, need
@@ -70,40 +70,40 @@
 
 - name: initialize mysql password
   mysql_user: user={{ compass_db_user }} password={{ compass_db_pass }}
-              priv=compass.*:ALL,GRANT state=present
+              priv=compass.*:ALL,GRANT state=present login_user=root login_password=root
  
 - name: create compass database
-  mysql_db: name=compass state=present
+  mysql_db: name=compass state=present login_user={{ compass_db_user}} login_password={{ compass_db_pass }}
 
 - name: install pip
   easy_install: name=pip
 
 - name: install virtualenv
-  pip: name=virtualenv extra_args='-i http://pypi.douban.com/simple/'
+  pip: name=virtualenv extra_args='-i https://pypi.python.org/simple/'
 
 - name: cloning compass-core
-  git: repo=http://git.openstack.org/stackforge/compass-core.git
+  git: repo=https://github.com/fishinbox/compass-core.git
        dest={{ COMPASS_PATH }}
-       version=dev/experimental
+       version=add-tc
        force=yes
 
 - name: pip install compass into virtualenv
   pip: name={{ COMPASS_PATH }} virtualenv={{ COMPASS_PATH }}/venv
-       extra_args='-i http://pypi.douban.com/simple/'
+       extra_args='-i https://pypi.python.org/simple/'
 
 - name: pip install latest setuptools
   pip: name=setuptools
-       extra_args='-i http://pypi.douban.com/simple/'
+       extra_args='-i https://pypi.python.org/simple/'
        state=latest
 
 - name: pip install latest setuptools2
   pip: name=setuptools
-       extra_args='-i http://pypi.douban.com/simple/'
+       extra_args='-i https://pypi.python.org/simple/'
        state=latest
 
 - name: pip install ansible
   pip: name=ansible
-       extra_args='-i http://pypi.douban.com/simple/'
+       extra_args='-i https://pypi.python.org/simple/'
        state=latest
 
 - name: create compass directories
@@ -212,7 +212,7 @@
     restart http service
 
 - name: clone compass web
-  git: repo=http://git.openstack.org/stackforge/compass-web.git
+  git: repo=https://github.com/openstack/compass-web.git
        dest=/opt/compass-web
        force=yes
 
