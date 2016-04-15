@@ -1,0 +1,12 @@
+---
+
+- name: install base packages
+  yum: name={{ item }} state=present
+  with_items:
+    - avahi
+    - libselinux-python
+
+- name: copy mdns file compass_discovery.service
+  copy: src={{ item }} dest=/etc/avahi/services/{{ item }} mode=0644
+  with_items:
+    - compass_discovery.service
