@@ -29,6 +29,9 @@
   yum: name={{ atomic_base_url }}/{{ atomic_file_name }} state=present
   when: atomic_presence.rc != 0
 
+- name: install mysql repo
+  yum: name={{ mysql_source }} state=present
+
 - name: yum update
   yum: name=* state=latest
 
@@ -70,7 +73,7 @@
 
 - name: initialize mysql password
   mysql_user: user={{ compass_db_user }} password={{ compass_db_pass }}
-              priv=compass.*:ALL,GRANT state=present login_user=root login_password=root
+              priv=compass.*:ALL,GRANT state=present
  
 - name: create compass database
   mysql_db: name=compass state=present login_user={{ compass_db_user}} login_password={{ compass_db_pass }}

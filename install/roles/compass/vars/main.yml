@@ -4,4 +4,4 @@ compass_db_pass: compass
 COMPASS_PATH: /opt/compass-core
 compass_adapter_source: https://github.com/fishinbox/compass-adapters.git
 compass_adapter_version: master
-
+mysql_source: http://repo.mysql.com/mysql-community-release-el7.rpm
