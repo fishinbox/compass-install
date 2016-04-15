@@ -211,6 +211,7 @@ docker_apt_key: 36A1D7869245C8950F966E92D8576A8BA88D21E9
 # epel version
 epel_file_name: epel-release-6-8.noarch.rpm
 epel_base_url: http://download.fedoraproject.org/pub/epel/6/x86_64/
+epel_package: epel-release
 
 # atomic version
 atomic_file_name: atomic-release-1.0-19.el6.art.noarch.rpm
