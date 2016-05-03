@@ -96,11 +96,12 @@
     - { name: named.template.nodocker.j2, file_name: named.template }
     - { name: settings.j2, file_name: settings }
   notify:
-    - restart httpd
     - restart cobbler
-    - cobbler sync
 
 - meta: flush_handlers
+
+- name: check cobbler status
+  wait_for: port=25151
 
 - name: clone snippets
   git: repo={{ compass_adapter_source }}
