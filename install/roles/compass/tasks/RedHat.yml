@@ -107,10 +107,13 @@
        extra_args='-i https://pypi.python.org/simple/'
        state=latest
 
+- name: pip install paramiko
+  pip: name=paramiko
+       version=1.17.0
+
 - name: pip install ansible
   pip: name=ansible
        extra_args='-i https://pypi.python.org/simple/'
-       state=latest
 
 - name: create compass directories
   file: path={{ item }} state=directory
