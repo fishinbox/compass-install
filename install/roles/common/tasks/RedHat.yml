@@ -10,3 +10,7 @@
   copy: src={{ item }} dest=/etc/avahi/services/{{ item }} mode=0644
   with_items:
     - compass_discovery.service
+
+- name: ln libcrypto.so
+  file: src=/usr/lib64/libcrypto.so.10 dest=/usr/lib64/libcrypto.so state=link
+
