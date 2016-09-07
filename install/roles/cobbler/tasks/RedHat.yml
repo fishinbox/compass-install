@@ -292,7 +292,7 @@
   command: cobbler profile edit --name=CorePure-x86_64 --enable-menu=True
 
 - name: create default system
-  command: cobbler system add --name=default --profile=CorePure-x86_64
+  command: cobbler system add --name=default --profile=CorePure-x86_64 --kopts="owner_id=1"
   ignore_errors: yes
   run_once: True
 
