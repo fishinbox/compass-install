@@ -289,10 +289,10 @@
   run_once: True
 
 - name: edit agent profile
-  command: cobbler profile edit --name=CorePure-x86_64 --enable-menu=True
+  command: cobbler profile edit --name=CorePure-x86_64 --enable-menu=True --kopts="owner_id=1"
 
 - name: create default system
-  command: cobbler system add --name=default --profile=CorePure-x86_64 --kopts="owner_id=1"
+  command: cobbler system add --name=default --profile=CorePure-x86_64 
   ignore_errors: yes
   run_once: True
 
